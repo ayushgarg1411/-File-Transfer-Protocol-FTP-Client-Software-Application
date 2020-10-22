@@ -1,34 +1,35 @@
-# Application Name 
+# Application Name: FTP Client Software Application
 
-General descriptions of the application go here.
+This application is basically a FTP Client software application where FTP client sends FTP request messages to an FTP server. FTP server interprets the request message, takes appropriate action, and sends back response message to the client.
 
 
 
 
 ## Technologies
 
-The descriptions of the technologies that are used in this application go here. It includes dependencies or pre-requisites.
-
+To build this project, I use C++ language using Unix Network or Socket programming API.
 
 
 
 ## Build, Run, Test, Installation, and Uninstallation
 
-Instructions on how to build, run, test, install, and uninstall the application go here.
-
+Compiling and run and testing is simple. User just need to type make with server, port as command line argument and this program will starting executing.
 
 
 
 ## Usage
 
-Instructions on how to run the application go here.
-
+User just need to give the following commands:
+make clean
+make
 
 
 
 ## Contributors
 
-List of the contributors goes here.
+Instructor name: Humayun Kabir
+list of contributor: 1) Ayush Garg
+I did the assignment individually.
 
 
 
