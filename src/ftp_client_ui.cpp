@@ -18,14 +18,17 @@
 
  using namespace std;
 
+ using namespace std;
+
+ string response;
+ int responseCount = 0;
 
  void getUserCommand()
- {/*
+ {
  	string command;
  	cout<<FTP_CLIENT_PROMT<<endl;
  	cin>>command;
  	interpretAndHandleUserCommand(command);
-  */
  }
  // Displays a command line prompt as follows:
  //      CSCI460FTP>>
@@ -33,43 +36,67 @@
  // Interprets and handles user command by calling function interpreteAndHandleUserCommand().
 
  void interpretAndHandleUserCommand(string command)
- {/*
- 	if(command == FTP_CLIENT_USER_COMMAND_HELP)
+ {
+ 	string str[2];
+ 	int i=0;
+
+  char char_array[100];
+  strcpy(char_array, command.c_str());
+  char *token = strtok(char_array, " ");
+	while (token != NULL)
+	{
+		st[i]=token;
+		i++;
+		token = strtok(NULL, " ");
+	}
+
+
+
+ 	if(str[0] == FTP_CLIENT_USER_COMMAND_HELP)
  	{
  		handleCommandHelp();
+ 		showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_USER)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_USER)
  	{
- 		handleCommandUser();
+     	handleCommandUser(str[1], &response, responseCount);
+     	showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_PASSWORD)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_PASSWORD)
  	{
- 		handleCommandPassword();
+ 	    handleCommandPassword(str[1], &response, responseCount);
+ 	    showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_DIRECTORY)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_DIRECTORY)
  	{
- 		handleCommandDirectory()
+ 	    handleCommandDirectory(&response, responseCount);
+ 	    showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_PRINT_DIRECTORY)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_PRINT_DIRECTORY)
  	{
- 		handleCommandPrintDirectory();
+ 	    handleCommandPrintDirectory(&response, responseCount);
+ 	    showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_CHANGE_DIRECTORY)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_CHANGE_DIRECTORY)
  	{
- 		handleCommandChangeDirectory();
+ 	    handleCommandChangeDirectory(str[1], &response, responseCount);
+ 	    showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_CHANGE_DIRECTORY_UP)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_CHANGE_DIRECTORY_UP)
  	{
- 		handleCommandChangeDirectoryUp();
+ 		handleCommandChangeDirectoryUp(&response, responseCount);
+ 		showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_GET)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_GET)
  	{
- 		handleCommandGetFile();
+ 	    handleCommandGetFile(str[1], &response, responseCount);
+ 	    showFtpResponse(response);
  	}
- 	else if(command == FTP_CLIENT_USER_COMMAND_QUIT)
+ 	else if(str[0] == FTP_CLIENT_USER_COMMAND_QUIT)
  	{
- 		handleCommandQuit();
- 	}*/
+ 	    handleCommandQuit(&response, responseCount);
+ 	    showFtpResponse(response);
+ 	}
  }
  // Interprets and handles user command
  // Calls appropriate handleCommandXXXX() function from 'ftp_client_command.hpp'.
@@ -77,7 +104,5 @@
 
  void showFtpResponse(string response)
  {
- 	string message;
- 	//receiveFromServer(------, message, FTP_COMMAND_MAX_LENGTH);
- 	cout<<response;
+ 	cout<<response<<endl;
  }
