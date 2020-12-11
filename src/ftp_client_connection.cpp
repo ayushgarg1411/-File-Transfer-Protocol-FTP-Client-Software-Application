@@ -21,6 +21,7 @@
 void connectToServer(int& socketDescriptor, bool& isConnected, const char* serverIP, int serverPort)
 {
 	socketDescriptor = -1;
+  //socketDescriptor = socket(AF_INET, )
 	struct sockaddr_in server;
 	server.sin_family = AF_INET;
 	server.sin_port = (htons(serverPort));
@@ -46,7 +47,7 @@ void disconnectFromServer(int& socketDescriptor, bool& isConnected)
 // on the network connection represented by 'sockDescriptor'.
 int sendToServer(int sockDescriptor, const char* message, int messageLength)
 {
-	return send(sockDescriptor, &message, messageLength, 0);
+	return send(sockDescriptor, message, messageLength, 0);
 }
 
 
@@ -54,5 +55,5 @@ int sendToServer(int sockDescriptor, const char* message, int messageLength)
 // on the network connection represented by 'sockDescriptor'.
 int receiveFromServer(int sockDescriptor, char* message, int messageLength)
 {
-	return recv(sockDescriptor, &message, messageLength, 0);
+	return recv(sockDescriptor, message, messageLength, 0);
 }
