@@ -1,8 +1,8 @@
 /**
  *  @file: ftp_client_ui.hpp
- *  @author: Name, Student Number, Section,  CSCI 460, VIU
- *  @version: 1.0.0
- *  @modified: June 22, 2020
+ * @author: Ayush Garg, 656665809, F20N02, CSCI 460, VIU
+ * @version: 1.0.0
+ * @modified: Dec 10, 2020
  *
  */
 
@@ -30,22 +30,21 @@
  	cin>>command;
  	interpretAndHandleUserCommand(command);
  }
- // Displays a command line prompt as follows:
- //      CSCI460FTP>>
- // Lets user to type command and reads the user command from the prompt.
- // Interprets and handles user command by calling function interpreteAndHandleUserCommand().
+
+
 
  void interpretAndHandleUserCommand(string command)
  {
  	string str[2];
- 	int i=0;
+ 	int i;
 
   char char_array[100];
   strcpy(char_array, command.c_str());
   char *token = strtok(char_array, " ");
+  i=0;
 	while (token != NULL)
 	{
-		st[i]=token;
+		str[i]=token;
 		i++;
 		token = strtok(NULL, " ");
 	}
@@ -98,10 +97,9 @@
  	    showFtpResponse(response);
  	}
  }
- // Interprets and handles user command
- // Calls appropriate handleCommandXXXX() function from 'ftp_client_command.hpp'.
- // Displays all FTP server responses calling showFtpResponse() function.
 
+
+ 
  void showFtpResponse(string response)
  {
  	cout<<response<<endl;

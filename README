@@ -1,39 +1,69 @@
 # Application Name: FTP Client Software Application
 
-This application is basically a FTP Client software application where FTP client sends FTP request messages to an FTP server. FTP server interprets the request message, takes appropriate action, and sends back response message to the client.
-
+This application is basically a FTP Client software application where FTP client sends FTP request messages to an FTP server.
+FTP server interprets the request message, takes appropriate action, and sends back response message to the client.
+This FTP Client software have a command-line user interface (UI) so that the users can enter commands through this interface.
+This software accept and process following user commands.
+ help
+ user <username>
+ pass <password>
+ pwd
+ dir
+ cwd <dirname>
+ cdup
+ get <filename>
+ quit
 
 
 
 ## Technologies
 
-To build this project, I use C++ language using Unix Network or Socket programming API.
+This code is fully developed in C++ programming language.
+This program is designed and executed on Linux Debian machines of the VIU labs.
 
 
 
 ## Build, Run, Test, Installation, and Uninstallation
 
-Compiling and run and testing is simple. User just need to type make with server, port as command line argument and this program will starting executing.
-
+make sure to use the commands below to get the appropriate result:
+ps auwx | pgrep ftpserver
+killall -9 ftpserver
+After the above mentioned commands, you will need to terminals to execute the following project
+as this project is just the client side of the FTP client Software. To run the Client side, execute the following:
+make clean
+make
+make test
 
 
 ## Usage
 
-User just need to give the following commands:
-make clean
-make
+make sure to use the commands below to get the appropriate result:
+ps auwx | pgrep ftpserver
+killall -9 ftpserver
+After the above mentioned commands, you will need to terminals to execute the following project
+as this project is just the client side of the FTP client Software. To run the Client side, execute the command given below.
+
+To run the program, there is a makefile that is already designed.
+User simply need to type make to build all the dependencies;
+Then user will type make run that will give executable files to user
+ultimately our user will be having following options to run/check the program:
+
+>test/bin/ftpclienttest --log_level=all
 
 
 
 ## Contributors
 
-Instructor name: Humayun Kabir
-list of contributor: 1) Ayush Garg
-I did the assignment individually.
+
+Instructor Name: Humayun Kabir
+Contributor Name: Ayush Garg
 
 
 
 
-## License
+Copyright (C) 2020, Ayush Garg
 
-Terms and conditions or the types of licenses granted to use this application go here.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License.
+    

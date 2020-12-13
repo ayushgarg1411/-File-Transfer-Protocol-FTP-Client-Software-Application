@@ -1,8 +1,8 @@
 /**
  * @file: ftp_client_command.cpp
- * @author: Name, Student Number, Section, CSCI 460, VIU
+ * @author: Ayush Garg, 656665809, F20N02, CSCI 460, VIU
  * @version: 1.0.0
- * @modified: June 24, 2020
+ * @modified: Dec 12, 2020
  *
  */
 
@@ -13,129 +13,220 @@
  #include <sys/types.h>
  #include <sys/socket.h>
  #include <arpa/inet.h>
+ #include <fstream>
  #include "ftp_client_control.hpp"
  #include "ftp_client_ui.hpp"
  #include "ftp_server_response.hpp"
  #include "ftp_client_command.hpp"
 
 
- void handleCommandHelp(){}
- // Displays following help text on the user terminal
- // Usage: csci460Ftp>> [ help | user | pass | pwd | dir | cwd | cdup | get | quit ]
- //          help                    Gives the list of FTP commands available and how to use them.
- //          user    <username>      Sumbits the <username> to FTP server for authentication.
- //          pass    <password>      Sumbits the <password> to FTP server for authentication.
- //          pwd                     Requests FTP server to print current directory.
- //          dir                     Requests FTP server to list the entries of the current directory.
- //          cwd     <dirname>       Requests FTP server to change current working directory.
- //          cdup                    Requests FTP server to change current directory to parent directory.
- //          get     <filename>      Requests FTP server to send the file with <filename>.
- //          quit                    Requests to end FTP session and quit.
-
- void handleCommandUser(string username, string serverResponses[], int& serverResponseCount){}
- // Sends a 'USER <username>' request meesage to the FTP Server.
- // Receives response from FTP Server.
- // Returns server responses and response count through 'serverResponses' and 'serverResponseCount' parameters respectively.
- // Calls function handleSimpleCommandResponse() with "checkAuthentication" parameter value "true"
- // to perform the activities mentioned above.
-
- void handleCommandPassword(string password, string serverResponses[], int& serverResponseCount){}
- // Sends a 'PASS <password>' request message to the FTP Server.
- // Receives response from FTP Server.
- // Returns server responses and response count through 'serverResponses' and 'serverResponseCount' parameters respectively.
- // Calls function handleSimpleCommandResponse() with "checkAuthentication" parameter "true"
- // to perform the activities mentioned above.
-
- void handleCommandDirectory(string serverResponses[], int& serverResponseCount){}
- // Calls handlePassive() function to do the followings:
- // 	-send a 'PASV' request message to the FTP server.
- // 	-receive the response against PASV request message from the server.
- // 	-update 'serverResponses' and 'serverResponseCount' parameters based on PASV responses.
- // 	-retrieve data-connection listener port number from the successful response.
- // 	-requests a data connection to the server at the listener port at the server.
- // If the data connection is successful, calls handleNLIST() function to do the followings:
- // 	-send a 'NLST' request message to the server on the control connection.
- // 	-receive the response against NLST request from the server on the control connection.
- // 	-retrieve the list of entries of the current directory at the server on the data connection from the successful response..
- // 	-update 'serverResponses' and 'serverResponseCount' parameters based on NLST responses.
+ void handleCommandHelp()
+ {
+ 	cout<<"Usage: csci460Ftp>> [ help | user | pass | pwd | dir | cwd | cdup | get | quit ]"<<endl;
+ 	cout<<"\thelp\t\t\tGives the list of FTP commands available and how to use them."<<endl;
+ 	cout<<"\tuser\t<username>\tSumbits the <username> to FTP server for authentication."<<endl;
+ 	cout<<"\tpass\t<password>\tSumbits the <password> to FTP server for authentication."<<endl;
+ 	cout<<"\tpwd\t\t\tRequests FTP server to print current directory."<<endl;
+ 	cout<<"\tdir\t\t\tRequests FTP server to list the entries of the current directory."<<endl;
+ 	cout<<"\tcwd\t<dirname>\tRequests FTP server to change current working directory."<<endl;
+ 	cout<<"\tcdup\t\t\tRequests FTP server to change current directory to parent directory."<<endl;
+ 	cout<<"\tget\t<filename>\tRequests FTP server to send the file with <filename>."<<endl;
+ 	cout<<"\tquit\t\t\tRequests to end FTP session and quit."<<endl;
+ }
 
 
- void handleCommandPrintDirectory(string serverResponses[], int& serverResponseCount){}
- // Sends a 'PWD' request message to FTP Server.
- // Receives the response from the server.
- // Successful server response contains the current FTP directory at the server.
- // Returns server responses and response count through 'serverResponses' and 'serverResponseCount' parameters respectively.
- // Calls function handleSimpleCommandResponse() with "checkAuthentication" parameter "false"
- // to perform the activities mentioned above.
 
- void handleCommandChangeDirectory(string path, string serverResponses[], int& serverResponseCount){}
- // Sends a 'CWD <path>' request message to the FTP Server.
- // Returns server responses and response count through 'serverResponses' and 'serverResponseCount' parameters respectively.
- // Calls function handleSimpleCommandResponse() with "checkAuthentication" parameter "false"
- // to perform the activities mentioned above.
+ void handleCommandUser(string username, string serverResponses[], int& serverResponseCount)
+ {
+ 	string cmd;
+ 	cmd = "USER "+username;
+ 	handleSimpleCommand(cmd, true, serverResponses, serverResponseCount);
+ }
 
- void handleCommandChangeDirectoryUp(string serverResponses[], int& serverResponseCount){}
- // Sends a 'CDUP' request message to FTP Server.
- // Receives the response from the server.
- // Returns server responses and response count through 'serverResponses' and 'serverResponseCount' parameters respectively.
- // Calls function handleSimpleCommandResponse() with "checkAuthentication" parameter "false"
- // to perform the activities mentioned above.
 
- void handleCommandGetFile(string filename, string serverResponses[], int& serverResponseCount){}
- // Calls handlePassive() function to do the followings:
- // 	-send a 'PASV' request message to the FTP server.
- // 	-receive the response against PASV request message from the server.
- // 	-update 'serverResponses' and 'serverResponseCount' parameters based on PASV responses.
- // 	-retrieve data-connection listener port number from the successful response.
- // 	-requests a data connection to the server at the listener port at the server.
- // If the data connection is successful, calls handleRETR() function to do the followings:
- // 	-send a 'RETR <filename>' request message to the server on the control connection.
- // 	-receive the response against RETR request from the server on the control connection.
- // 	-retrieve the content of the file on the data connection from the successful response.
- // 	-save the content of the file with <filename> at local folder.
- // 	-update 'serverResponses' and 'serverResponseCount' parameters based on RETR responses.
 
- void handleCommandQuit(string serverResponses[], int& serverResponseCount){}
+ void handleCommandPassword(string password, string serverResponses[], int& serverResponseCount)
+ {
+   	string cmd;
+   	cmd = "PASS "+password;
+   	handleSimpleCommand(cmd, true, serverResponses, serverResponseCount);
+ }
 
- // Sends a 'QUIT' request message to FTP Server.
- // Calls function handleSimpleCommandResponse() with "checkAuthentication" parameter "false"
- // to send 'QUIT' request message.
- // Returns server responses and response count through 'serverResponses' and 'serverResponseCount' parameters respectively.
- // Quits from the application.
 
- void handlePassive( string serverResponses[], int& serverResponseCount){}
- // Sends a 'PASV' request message to the FTP server.
- // Receives the response against PASV request message from the server.
- // Updates 'serverResponses' and 'serverResponseCount' parameters based on PASV responses.
- // If the response is a successful one, retrives data-connection listener port number form the response.
- // Retrives data-connection listener port number form the response
- // using function getHostIPAndPortFromPassiveSuccessResponse().
- // Requests a data connection to the server on the listener port at the server.
+ void handleCommandDirectory(string serverResponses[], int& serverResponseCount)
+ {
+ 	  handlePassive(serverResponses, serverResponseCount);
+ 		handleNLIST(serverResponses, serverResponseCount);
+ }
 
- void handleNLIST(string serverResponses[], int& serverResponseCount){}
- // Sends a 'NLST' request message to the server on the control connection.
- // Receives the response against NLST request from the server on the control connection.
- // Updates 'serverResponses' and 'serverResponseCount' parameters based on NLST responses.
- // If the response is successful, retrieves the list of entries in server's current directory
- // on the data connection.
- // Adds the list of directory entries to 'serverResponses' and updates 'serverResponseCount'.
 
- void handleRETR(string filename, string serverResponses[], int& serverResponseCount){}
- // Sends a 'RETR <filename>' request message to the server on the control connection.
- // Receives the response against RETR request from the server on the control connection.
- // Updates 'serverResponses' and 'serverResponseCount' parameters based on RETR responses.
- // If the response is successful, retrieves the content of the file on the data connection.
- // Saves the file in the local directory at the client computer.
 
- void handleSimpleCommand(string ftpCommand, bool checkAuthentication, string serverResponses[], int& serverResponseCount){}
- // Sends 'ftpCommand' request message to FTP server on the control connection.
- // Receives the response from the server against the request.
- // Returns server responses and response count through 'serverResponses' and 'serverResponseCount' parameters respectively.
- // If the response is unsuccessful and checkAuthentication parameter value is true, quits the application.
 
- void getHostIPAndPortFromPassiveSuccessResponse(char* response, char* hostIP, int& hostPort){}
- // Retrieves IP address of FTP Server from the response string into reference 'hostIP'.
- // Retrives data-connection listening port number of FTP server from the response string into reference 'hostPort'.
- // The example of a successful response message is "227 Entering Passive Mode (192,168,1,65,202,143)."
- // From the above response message 'hostIP' will be 192.168.1.65 and 'hostPort' will be
- // (202x256 + 143) or 51855.
+ void handleCommandPrintDirectory(string serverResponses[], int& serverResponseCount)
+ {
+    handleSimpleCommand("PWD", false, serverResponses, serverResponseCount);
+ }
+
+
+
+ void handleCommandChangeDirectory(string path, string serverResponses[], int& serverResponseCount)
+ {
+   	string cmd = "CWD "+path;
+   	handleSimpleCommand(cmd, false, serverResponses, serverResponseCount);
+ }
+
+
+
+ void handleCommandChangeDirectoryUp(string serverResponses[], int& serverResponseCount)
+ {
+    handleSimpleCommand("CDUP", false, serverResponses, serverResponseCount);
+ }
+
+
+ void handleCommandGetFile(string filename, string serverResponses[], int& serverResponseCount)
+ {
+ 	  handlePassive(serverResponses, serverResponseCount);
+ 		handleRETR(filename, serverResponses, serverResponseCount);
+ }
+
+
+
+ void handleCommandQuit(string serverResponses[], int& serverResponseCount)
+ {
+ 	  handleSimpleCommand("QUIT", false, serverResponses, serverResponseCount);
+
+ }
+
+
+
+ void handlePassive( string serverResponses[], int& serverResponseCount)
+ {
+     char* buffer = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+     sendOnControl("PASV", strlen("PASV"));
+     int n;
+     n = receiveOnControl(buffer, DATA_SOCKET_RECEIVE_BUFFER_SIZE);
+     serverResponses[serverResponseCount++] = buffer;
+     if(n > 0)
+     {
+       char* hostIP = new char[100];
+       int hostPort;
+       getHostIPAndPortFromPassiveSuccessResponse(buffer, hostIP, hostPort);
+       connectToServerData(hostIP, hostPort);
+     }
+      else
+     {
+       handleCommandQuit(serverResponses,serverResponseCount);
+     }
+ }
+
+
+
+ void handleNLIST(string serverResponses[], int& serverResponseCount)
+ {
+    char* buffer = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+  	char* response = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+  	int n;
+  	sendOnControl("NLST", strlen("NLST"));
+  	n = receiveOnControl(buffer, DATA_SOCKET_RECEIVE_BUFFER_SIZE);
+  	serverResponses[serverResponseCount++] = buffer;
+  	if(n > 0)
+  	{
+      receiveOnControl(buffer, BUFFER_SIZE);
+      serverResponses[serverResponseCount++] = buffer;
+      receiveOnData(response, DATA_SOCKET_RECEIVE_BUFFER_SIZE);
+      serverResponses[serverResponseCount++] = response;
+  	}
+ }
+
+
+ void handleRETR(string filename, string serverResponses[], int& serverResponseCount)
+ {
+   string cmd;
+   FILE* fp;
+   int n;
+   char* f = new char[100];
+   char* response = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+   strcpy(f, filename.c_str());
+   fp = fopen(f, FILE_OPEN_MODE);
+   char* command = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+   char* buffer = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+   cmd = "RETR " + filename;
+   strcpy(command, cmd.c_str());
+   sendOnControl(command, strlen(command));
+   n = receiveOnControl(buffer, DATA_SOCKET_RECEIVE_BUFFER_SIZE);
+   serverResponses[serverResponseCount++] = buffer;
+   if(n > 0)
+   {
+  		receiveOnData(response, DATA_SOCKET_RECEIVE_BUFFER_SIZE);
+      receiveOnControl(buffer, DATA_SOCKET_RECEIVE_BUFFER_SIZE);
+   		serverResponses[serverResponseCount++] = buffer;
+  		fprintf(fp, response);
+   }
+   fclose(fp);
+ }
+
+
+ void handleSimpleCommand(string ftpCommand, bool checkAuthentication, string serverResponses[], int& serverResponseCount)
+ {
+    int n;
+    char* buffer = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+  	char* str = new char[DATA_SOCKET_RECEIVE_BUFFER_SIZE];
+  	strcpy(str, ftpCommand.c_str());
+  	sendOnControl(str, strlen(str));
+  	n = receiveOnControl(buffer, DATA_SOCKET_RECEIVE_BUFFER_SIZE);
+  	serverResponses[serverResponseCount++] = buffer;
+  	if(n < 0 && checkAuthentication)
+  	{
+  		handleCommandQuit(serverResponses, serverResponseCount);
+  	}
+ }
+
+ void getHostIPAndPortFromPassiveSuccessResponse(char* response, char* hostIP, int& hostPort)
+ {
+    int j = 0,s = 0,l = 0;
+  	int i = 27;
+  	int arr[6];
+    strcpy(hostIP,"");
+  	if(response[26] == '(')
+  	{
+  	    do
+  	    {
+  	        j = response[i];
+  	        j = j-48;
+  	        if(response[i] !=',' && response[i] !=')')
+  	        {
+  	            l = l+j;
+  	            l = l*10;
+  	        }
+  	        else
+  	        {
+  	            l = l/10;
+  	            arr[s] = l;
+  	            s++;
+  	            l = 0;
+  	        }
+  	        i++;
+  	    }while(response[i] != '.');
+  	}
+  	i = 0;
+    char hh[1000];
+  	while(i!=5)
+  	{
+  		if(i < 4)
+  		{
+  			sprintf(hh, "%d", arr[i]);
+  			strcat(hostIP,hh);
+  			if(i!=3)
+  		    {
+  		        strcat(hostIP, ".");
+  		    }
+  			i++;
+  		}
+  		else
+  		{
+  			hostPort = (arr[i]*256);
+        i++;
+        hostPort = hostPort + arr[i];
+  		}
+   }
+}
